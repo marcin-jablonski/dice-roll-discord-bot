@@ -1,0 +1,11 @@
+{
+  "name": "dice-roll",
+  "version": "0.0.1",
+  "description": "Dice roll bot",
+  "main": "bot.js",
+  "author": "Marcin Jabłoński",
+  "dependencies": {
+    "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
+    "winston": "^3.2.1"
+  }
+}
