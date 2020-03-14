@@ -66,7 +66,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
       case 'roll':
         var dice = args[1];
 
-        if (dice !== undefined && !dice.match("^d[0-9]+$")) {
+        if (dice !== undefined && !dice.match("^[0-9]*d[0-9]+$")) {
           dice = undefined;
         }
 
