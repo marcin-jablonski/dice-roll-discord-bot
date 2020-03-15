@@ -1,5 +1,6 @@
-var Discord = require('discord.js');
-var logger = require('winston');
+const Discord = require('discord.js');
+const logger = require('winston');
+const config = require("./config.json");
 
 var usersNotified = [];
 
@@ -9,7 +10,7 @@ logger.add(new logger.transports.Console, {
 });
 logger.level = 'debug';
 
-var bot = new Discord.Client();
+const bot = new Discord.Client();
 
 bot.once('ready', () => {
   logger.info('Connected');
@@ -19,7 +20,7 @@ bot.once('ready', () => {
 roll = function(dice) {
   logger.debug("Rolling for: " + dice);
 
-  var diceSplit = dice.split("d");
+  const diceSplit = dice.split("d");
 
   if (diceSplit.length != 2) {
     logger.error("Wrong dice format");
@@ -27,22 +28,22 @@ roll = function(dice) {
     return;
   }
 
-  var numberOfDice = diceSplit[0];
+  var numberOfDice = parseInt(diceSplit[0]);
 
-  if (numberOfDice === "") {
+  if (isNaN(numberOfDice)) {
     numberOfDice = 1;
   }
 
   logger.debug("Number of dice to roll: " + numberOfDice);
 
-  var diceType = diceSplit[1];
+  const diceType = parseInt(diceSplit[1]);
 
   logger.debug("Dice type: " + diceType);
 
   var result = 0;
 
   for (i = 0; i < numberOfDice; i++) {
-    var rollResult = Math.floor(Math.random() * diceType) + 1;
+    const rollResult = Math.floor(Math.random() * diceType) + 1;
     logger.debug("Dice roll " + (i + 1) + ": " + rollResult);
     result += rollResult;
   }
@@ -54,7 +55,7 @@ roll = function(dice) {
 
 bot.on('presenceUpdate', (oldPresence, newPresence) => {
   if (newPresence.status === "online" && usersNotified.findIndex((item) => item === newPresence.userID) === -1) {
-    let infoMessage = "Hi! I am dice roll bot. You can use me in following ways:\n" +
+    const infoMessage = "Hi! I am dice roll bot. You can use me in following ways:\n" +
     "- you can just type \"!roll\" to roll d100\n" +
     "- you can also extend this with dice you want to roll, e.g. \"!roll d20\", \"!roll 2d10\", etc.\n" +
     "- if you want to know if you roll was succesful, you can also add target value, e.g. \"!roll target 30\", \"!roll d6 target 4\"\n" +
@@ -68,43 +69,42 @@ bot.on('presenceUpdate', (oldPresence, newPresence) => {
 })
 
 bot.on('message', (message) => {
-  // Our bot needs to know if it will execute a command
-  // It will listen for messages that will start with `!`
-  if (message.content.substring(0, 1) == '!') {
-    logger.debug("Received message: " + message.content);
-    var args = message.content.substring(1).split(' ');
-    var cmd = args[0];
-    
-    switch(cmd) {
-      case 'roll':
-        var dice = args[1];
+  
+  if (!message.content.startsWith(config.prefix) || message.author.bot) return;
 
-        if (dice !== undefined && !dice.match("^[0-9]*d[0-9]+$")) {
-          dice = undefined;
-        }
+  logger.debug("Received message: " + message.content);
+  const args = message.content.slice(config.prefix.length).split(/ +/);
+  const cmd = args.shift().toLowerCase();
+  
+  switch(cmd) {
+    case 'roll':
+      var dice = args[1];
 
-        var targetIndex = 2;
+      if (dice !== undefined && !dice.match("^[0-9]*d[0-9]+$")) {
+        dice = undefined;
+      }
 
-        if (dice === undefined) {
-          dice = "d100";
-          targetIndex = 1;
-        }
+      var targetIndex = 2;
 
-        var target = args[targetIndex] === "target" ? args[targetIndex + 1] : undefined;
+      if (dice === undefined) {
+        dice = "d100";
+        targetIndex = 1;
+      }
 
-        var rollResult = roll(dice);
+      const target = args[targetIndex] === "target" ? parseInt(args[targetIndex + 1]) : undefined;
 
-        var returnMessage = message.author.username + " rolled " + dice + ", result: " + rollResult;
+      const rollResult = roll(dice);
 
-        if (target !== undefined) {
-          var isRollSuccessful = rollResult <= target;
-          
-          returnMessage += ", target: " + target + ", roll " + (isRollSuccessful ? "successful" : "not successful");
-        }
+      var returnMessage = message.author.username + " rolled " + dice + ", result: " + rollResult;
 
-        message.channel.send(returnMessage);
-      break;
-    }
+      if (target !== undefined) {
+        const isRollSuccessful = rollResult <= target;
+        
+        returnMessage += ", target: " + target + ", roll " + (isRollSuccessful ? "successful" : "not successful");
+      }
+
+      message.channel.send(returnMessage);
+    break;
   }
 });
 
