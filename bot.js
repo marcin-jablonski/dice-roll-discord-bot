@@ -1,4 +1,4 @@
-var Discord = require('discord.io');
+var Discord = require('discord.js');
 var logger = require('winston');
 
 var usersNotified = [];
@@ -7,17 +7,13 @@ logger.remove(logger.transports.Console);
 logger.add(new logger.transports.Console, {
   colorize: true
 });
-logger.level = 'error';
+logger.level = 'debug';
 
-var bot = new Discord.Client({
-  token: process.env.BOT_TOKEN,
-  autorun: true
-});
+var bot = new Discord.Client();
 
-bot.on('ready', function (evt) {
+bot.once('ready', () => {
   logger.info('Connected');
-  logger.info('Logged in as: ');
-  logger.info(bot.username + ' - (' + bot.id + ')');
+  logger.info('Logged in as: ' + bot.user);
 });
 
 roll = function(dice) {
@@ -56,8 +52,8 @@ roll = function(dice) {
   return result;
 }
 
-bot.on('presence', function(user, userID, status, game, event) {
-  if (status === "online" && usersNotified.findIndex((item) => item === userID) === -1) {
+bot.on('presenceUpdate', (oldPresence, newPresence) => {
+  if (newPresence.status === "online" && usersNotified.findIndex((item) => item === newPresence.userID) === -1) {
     let infoMessage = "Hi! I am dice roll bot. You can use me in following ways:\n" +
     "- you can just type \"!roll\" to roll d100\n" +
     "- you can also extend this with dice you want to roll, e.g. \"!roll d20\", \"!roll 2d10\", etc.\n" +
@@ -65,21 +61,18 @@ bot.on('presence', function(user, userID, status, game, event) {
     "\n" + 
     "You can write directly to me or on any channel. Have fun!"
 
-    bot.sendMessage({
-      to: userID,
-      message: infoMessage
-    });
+    newPresence.user.send(infoMessage);
 
-    usersNotified.push(userID);
+    usersNotified.push(newPresence.userID);
   }
 })
 
-bot.on('message', function (user, userID, channelID, message, evt) {
+bot.on('message', (message) => {
   // Our bot needs to know if it will execute a command
   // It will listen for messages that will start with `!`
-  if (message.substring(0, 1) == '!') {
-    logger.debug("Received message: " + message);
-    var args = message.substring(1).split(' ');
+  if (message.content.substring(0, 1) == '!') {
+    logger.debug("Received message: " + message.content);
+    var args = message.content.substring(1).split(' ');
     var cmd = args[0];
     
     switch(cmd) {
@@ -101,7 +94,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
 
         var rollResult = roll(dice);
 
-        var returnMessage = user + " rolled " + dice + ", result: " + rollResult;
+        var returnMessage = message.author.username + " rolled " + dice + ", result: " + rollResult;
 
         if (target !== undefined) {
           var isRollSuccessful = rollResult <= target;
@@ -109,11 +102,10 @@ bot.on('message', function (user, userID, channelID, message, evt) {
           returnMessage += ", target: " + target + ", roll " + (isRollSuccessful ? "successful" : "not successful");
         }
 
-        bot.sendMessage({
-          to: channelID,
-          message: returnMessage
-        });
+        message.channel.send(returnMessage);
       break;
     }
   }
 });
+
+bot.login(process.env.BOT_TOKEN);
