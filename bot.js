@@ -1,6 +1,8 @@
 var Discord = require('discord.io');
 var logger = require('winston');
 
+var usersNotified = [];
+
 logger.remove(logger.transports.Console);
 logger.add(new logger.transports.Console, {
   colorize: true
@@ -53,6 +55,24 @@ roll = function(dice) {
 
   return result;
 }
+
+bot.on('presence', function(user, userID, status, game, event) {
+  if (status === "online" && usersNotified.findIndex((item) => item === userID) === -1) {
+    let infoMessage = "Hi! I am dice roll bot. You can use me in following ways:\n" +
+    "- you can just type \"!roll\" to roll d100\n" +
+    "- you can also extend this with dice you want to roll, e.g. \"!roll d20\", \"!roll 2d10\", etc.\n" +
+    "- if you want to know if you roll was succesful, you can also add target value, e.g. \"!roll target 30\", \"!roll d6 target 4\"\n" +
+    "\n" + 
+    "You can write directly to me or on any channel. Have fun!"
+
+    bot.sendMessage({
+      to: userID,
+      message: infoMessage
+    });
+
+    usersNotified.push(userID);
+  }
+})
 
 bot.on('message', function (user, userID, channelID, message, evt) {
   // Our bot needs to know if it will execute a command
