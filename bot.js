@@ -105,6 +105,7 @@ bot.on('message', (message) => {
       }
 
       message.channel.send(returnMessage);
+      break;
     case 'combat':
       const combatInfo = "How to: combat\n" +
       "\n" +
@@ -132,7 +133,7 @@ bot.on('message', (message) => {
       "4. Tell all those things to GM :)";
 
       message.channel.send(combatInfo);
-    break;
+      break;
   }
 });
 
