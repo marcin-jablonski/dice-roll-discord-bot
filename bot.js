@@ -107,17 +107,28 @@ bot.on('message', (message) => {
       message.channel.send(returnMessage);
     case 'combat':
       const combatInfo = "How to: combat\n" +
+      "\n" +
       "When combat begins everyone rolls d10 and adds roll results to their Initiative value - this is your initiative for this fight. " +
       "You will perform actions according to initiative order, where player (or NPC) with highest value begins.\n" +
+      "\n" +
       "In your turn you are allowed to do 2 \"mechanical\" things: 1 Action and 1 Move. Move is anything that can be described as purely moving - walking, running etc. " +
-      "Action is anything that you need to roll for. The best course of action is to describe whatever you want your character to do and wait for GM to interrupt you and ask for roll - that's when your turn will end.\n" +
+      "Action is anything that you need to roll for. " + 
+      "The best course of action is to describe whatever you want your character to do and wait for GM to interrupt you and ask for roll - that's when your turn will end.\n" +
       "\n" +
       "If your Action actually ends with you trying to hit something - good for you! But the road from \"trying\" to actaully hitting something is a bit longer... Here's why:\n" +
+      "\n" +
       "1. First, you must actually hit the thing. To check if you managed to do so, you must roll d100 and check results against appropriate skill. " +
-      "That skill depends on the weapon you fight with, and it will be called \"Melee/Ranged (weapond type)\". (If you don't have such skill: if it is melee weapon you can roll for \"Melee\" skill - everyone has it. Weapon is ranged? Tough luck, you can't use it)\n" +
+      "That skill depends on the weapon you fight with, and it will be called \"Melee/Ranged (weapon type)\". " +
+      "(If you don't have such skill: if it is melee weapon you can roll for \"Melee\" skill - everyone has it. Weapon is ranged? Tough luck, you can't use it)\n" +
+      "\n" +
       "If that roll is a success - good job, you managed to hit something!*\n" +
-      "2. Assuming you hit that thing, you have to know where you hit it. Hit location is determined by reversing you hit roll (so, if you rolled 42 for hit, hit location is 24 - you can check what body part it is on your character sheet).\n" +
-      "3. Now when you know where did you hit, let's calculate how HARD did you hit. Firts of all, take Success Levels from your hit roll. Then check your weapon damage and add that. Finally, if the weapon is melee, add your Strength Bonus. This is how much damage you caused.\n" +
+      "\n" +
+      "2. Assuming you hit that thing, you have to know where you hit it. " +
+      "Hit location is determined by reversing you hit roll (so, if you rolled 42 for hit, hit location is 24 - you can check what body part it is on your character sheet).\n" +
+      "\n" +
+      "3. Now when you know where did you hit, let's calculate how HARD did you hit. Firts of all, take Success Levels from your hit roll. " + 
+      "Then check your weapon damage and add that. Finally, if the weapon is melee, add your Strength Bonus. This is how much damage you caused.\n" +
+      "\n" +
       "4. Tell all those things to GM :)";
 
       message.channel.send(combatInfo);
