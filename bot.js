@@ -79,17 +79,17 @@ bot.on('message', (message) => {
   
   switch(cmd) {
     case 'roll':
-      var dice = args[1];
+      var dice = args[0];
 
       if (dice !== undefined && !dice.match("^[0-9]*d[0-9]+$")) {
         dice = undefined;
       }
 
-      var targetIndex = 2;
+      var targetIndex = 1;
 
       if (dice === undefined) {
         dice = "d100";
-        targetIndex = 1;
+        targetIndex = 0;
       }
 
       const target = args[targetIndex] === "target" ? parseInt(args[targetIndex + 1]) : undefined;
