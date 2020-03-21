@@ -54,7 +54,7 @@ roll = function(dice) {
 }
 
 bot.on('presenceUpdate', (oldPresence, newPresence) => {
-  if (newPresence.status === "online" && usersNotified.findIndex((item) => item === newPresence.userID) === -1) {
+  if (newPresence.status === "online" && usersNotified.findIndex((item) => item === newPresence.user.username) === -1) {
     const infoMessage = "Hi! I am dice roll bot. You can use me in following ways:\n" +
     "- you can just type \"!roll\" to roll d100\n" +
     "- you can also extend this with dice you want to roll, e.g. \"!roll d20\", \"!roll 2d10\", etc.\n" +
@@ -65,7 +65,7 @@ bot.on('presenceUpdate', (oldPresence, newPresence) => {
 
     newPresence.user.send(infoMessage);
 
-    usersNotified.push(newPresence.userID);
+    usersNotified.push(newPresence.user.username);
   }
 })
 
