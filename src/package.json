@@ -2,10 +2,10 @@
   "name": "dice-roll",
   "version": "0.0.1",
   "description": "Dice roll bot",
-  "main": "bot.js",
+  "main": "app.js",
   "author": "Marcin Jabłoński",
   "scripts": {
-    "start": "node bot.js"
+    "start": "node app.js"
   },
   "dependencies": {
     "discord.js": "^12.0.2",
