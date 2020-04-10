@@ -4,8 +4,6 @@ const config = require("./config.json");
 
 require("dotenv").config();
 
-var usersNotified = [];
-
 logger.remove(logger.transports.Console);
 logger.add(new logger.transports.Console, {
   colorize: true
@@ -55,22 +53,6 @@ roll = function(dice) {
   return result;
 }
 
-bot.on('presenceUpdate', (oldPresence, newPresence) => {
-  if (newPresence.status === "online" && usersNotified.findIndex((item) => item === newPresence.user.username) === -1) {
-    const infoMessage = "Hi! I am dice roll bot. You can use me in following ways:\n" +
-    "- you can just type \"!roll\" to roll d100\n" +
-    "- you can also extend this with dice you want to roll, e.g. \"!roll d20\", \"!roll 2d10\", etc.\n" +
-    "- if you want to know if you roll was succesful, you can also add target value, e.g. \"!roll target 30\", \"!roll d6 target 4\"\n" +
-    "\n" + 
-    "Also, if you need a short reminder for combat rules, type \"!combat\".\n" + 
-    "You can write directly to me or on any channel. Have fun!"
-
-    newPresence.user.send(infoMessage);
-
-    usersNotified.push(newPresence.user.username);
-  }
-})
-
 bot.on('message', (message) => {
   
   if (!message.content.startsWith(config.prefix) || message.author.bot) return;
@@ -80,6 +62,17 @@ bot.on('message', (message) => {
   const cmd = args.shift().toLowerCase();
   
   switch(cmd) {
+    case 'help':
+      const infoMessage = "Hi! I am dice roll bot. You can use me in following ways:\n" +
+      "- you can just type \"!roll\" to roll d100\n" +
+      "- you can also extend this with dice you want to roll, e.g. \"!roll d20\", \"!roll 2d10\", etc.\n" +
+      "- if you want to know if you roll was succesful, you can also add target value, e.g. \"!roll target 30\", \"!roll d6 target 4\"\n" +
+      "\n" + 
+      "Also, if you need a short reminder for combat rules, type \"!combat\".\n" + 
+      "You can write directly to me or on any channel. Have fun!"
+
+      message.channel.send(infoMessage)
+      break;
     case 'roll':
       var dice = args[0];
 
