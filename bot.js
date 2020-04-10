@@ -2,6 +2,8 @@ const Discord = require('discord.js');
 const logger = require('winston');
 const config = require("./config.json");
 
+require("dotenv").config();
+
 var usersNotified = [];
 
 logger.remove(logger.transports.Console);
