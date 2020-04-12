@@ -4,6 +4,12 @@ const config = require("./config.json");
 
 require("dotenv").config();
 
+const token = process.env.BOT_TOKEN;
+
+if (token === "" || token === null || token === undefined) {
+  throw new Error("Discord bot token not provided.")
+}
+
 logger.remove(logger.transports.Console);
 logger.add(new logger.transports.Console, {
   colorize: true
@@ -132,4 +138,4 @@ bot.on('message', (message) => {
   }
 });
 
-bot.login(process.env.BOT_TOKEN);
+bot.login(token);
