@@ -131,6 +131,18 @@ bot.on("message", (message) => {
       message.channel.send(returnMessage);
       break;
     case "readycheck":
+      if (
+        !message.member.roles.cache.has(
+          message.guild.roles.cache.find((role) => role.name == "game-master")
+        )
+      ) {
+        message.channel.send(
+          "Sorry, " +
+            message.author.toString() +
+            ", you're not allowed to start readycheck :("
+        );
+        break;
+      }
       const playerRole = message.guild.roles.cache.find(
         (role) => role.name == "player"
       );
