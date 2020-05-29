@@ -90,6 +90,7 @@ bot.on("message", (message) => {
         '- if you want to know if you roll was succesful, you can also add target value, e.g. "!roll target 30", "!roll d6 target 4"\n' +
         "\n" +
         'Also, if you need a short reminder for combat rules, type "!combat".\n' +
+        'If you are a game master, you can also start ready check - just type in "!readycheck" :)\n' +
         "You can write directly to me or on any channel. Have fun!";
 
       message.channel.send(infoMessage);
