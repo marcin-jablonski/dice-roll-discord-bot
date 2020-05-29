@@ -135,6 +135,7 @@ bot.on("message", (message) => {
       if (
         !message.member.roles.cache.has(
           message.guild.roles.cache.find((role) => role.name == "game-master")
+            .id
         )
       ) {
         message.channel.send(
